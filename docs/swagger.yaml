@@ -1,0 +1,71 @@
+basePath: /
+definitions:
+  handlers.Credentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://example.com/support
+  description: A lightweight and scalable REST API server built with GoLang.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://example.com/terms/
+  title: API Template
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.Credentials'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Invalid username or password
+          schema:
+            type: string
+      summary: Login user
+      tags:
+      - auth
+  /protected:
+    get:
+      description: Access a protected route using a JWT token
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Welcome
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Access protected resource
+      tags:
+      - auth
+swagger: "2.0"

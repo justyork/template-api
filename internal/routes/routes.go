@@ -12,6 +12,9 @@ import (
 func RegisterRoutes() *mux.Router {
 	r := mux.NewRouter()
 
+	// Apply CORS middleware to all routes
+	r.Use(middleware.CORSMiddleware)
+
 	// Health check route
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)

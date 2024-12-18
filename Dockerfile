@@ -6,6 +6,9 @@ WORKDIR /app
 # Install dependencies
 RUN apk add --no-cache sqlite
 
+# Copy Swagger docs
+COPY docs /app/docs
+
 # Copy dependency files and download modules
 COPY go.mod go.sum ./
 RUN go mod download

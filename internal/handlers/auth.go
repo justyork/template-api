@@ -25,6 +25,17 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+// LoginHandler godoc
+// @Summary Login user
+// @Description Authenticate user and return JWT token
+// @Tags auth
+// @Accept json
+// @Produce text/plain
+// @Param credentials body Credentials true "User credentials"
+// @Success 200 {string} string "Login successful"
+// @Failure 400 {string} string "Invalid request payload"
+// @Failure 401 {string} string "Invalid username or password"
+// @Router /login [post]
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
@@ -61,6 +72,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Login successful"))
 }
 
+// ProtectedHandler godoc
+// @Summary Access protected resource
+// @Description Access a protected route using a JWT token
+// @Tags auth
+// @Produce text/plain
+// @Success 200 {string} string "Welcome"
+// @Failure 401 {string} string "Unauthorized"
+// @Router /protected [get]
 func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("token")
 	if err != nil {

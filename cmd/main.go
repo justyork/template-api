@@ -2,7 +2,9 @@ package main
 
 import (
 	"database/sql"
+	_ "github.com/justyork/api-template/docs" // Import generated docs
 	"github.com/justyork/api-template/internal/middleware"
+	"github.com/swaggo/http-swagger" // Swagger handler
 	"log"
 	"net/http"
 	"os"
@@ -31,6 +33,20 @@ func applyMigrations(databaseURL string) {
 	log.Println("Migrations applied successfully")
 }
 
+// @title API Template
+// @version 1.0
+// @description A lightweight and scalable REST API server built with GoLang.
+// @termsOfService http://example.com/terms/
+
+// @contact.name API Support
+// @contact.url http://example.com/support
+// @contact.email support@example.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:8080
+// @BasePath /
 func main() {
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
@@ -64,6 +80,7 @@ func main() {
 
 	// Register routes
 	r := routes.RegisterRoutes()
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	log.Printf("Starting server on :%s", appPort)
 	log.Fatal(http.ListenAndServe(":"+appPort, r))
