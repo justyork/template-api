@@ -16,6 +16,9 @@ COPY . .
 # Create .env from .env.example if .env does not exist
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
+# Run tests before building
+RUN go test ./... -v
+
 # Build the application
 RUN go build -o api-template cmd/main.go
 

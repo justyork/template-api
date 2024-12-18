@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/justyork/api-template/internal/utils"
 )
 
 var jwtKey []byte
 
-// SetJWTKey sets the JWT secret key from main
 func SetJWTKey(key []byte) {
 	jwtKey = key
 }
@@ -29,13 +29,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		utils.WriteError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
-	// In a real application, replace this with database validation
 	if creds.Username != "testuser" || creds.Password != "password" {
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusUnauthorized, "Invalid username or password")
 		return
 	}
 
@@ -50,7 +49,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
-		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+		utils.WriteError(w, http.StatusInternalServerError, "Failed to generate token")
 		return
 	}
 
@@ -66,10 +65,10 @@ func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			utils.WriteError(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		utils.WriteError(w, http.StatusBadRequest, "Bad request")
 		return
 	}
 
@@ -80,7 +79,7 @@ func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 		return jwtKey, nil
 	})
 	if err != nil || !token.Valid {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusUnauthorized, "Unauthorized")
 		return
 	}
 

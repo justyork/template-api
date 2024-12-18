@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"github.com/justyork/api-template/internal/handlers"
+	"github.com/justyork/api-template/internal/middleware"
 	"log"
 	"net/http"
 	"os"
@@ -10,8 +10,8 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/justyork/api-template/internal/routes"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -47,7 +47,7 @@ func main() {
 	if jwtSecret == "" {
 		log.Fatal("JWT_SECRET not set")
 	}
-	handlers.SetJWTKey([]byte(jwtSecret)) // Передаем ключ в обработчики
+	middleware.SetJWTKey([]byte(jwtSecret))
 
 	appPort := os.Getenv("APP_PORT")
 	if appPort == "" {
@@ -62,19 +62,8 @@ func main() {
 
 	applyMigrations(databaseURL)
 
-	r := mux.NewRouter()
-
-	// Define routes
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("API is running"))
-	})
-
-	// Public routes
-	r.HandleFunc("/login", handlers.LoginHandler).Methods("POST")
-
-	// Protected route
-	r.HandleFunc("/protected", handlers.ProtectedHandler).Methods("GET")
+	// Register routes
+	r := routes.RegisterRoutes()
 
 	log.Printf("Starting server on :%s", appPort)
 	log.Fatal(http.ListenAndServe(":"+appPort, r))
