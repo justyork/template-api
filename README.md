@@ -22,11 +22,23 @@ A lightweight and scalable REST API server built with GoLang and Docker.
 ```bash
     docker-compose up --build 
 ```
+#### Running Migrations
+Migrations are automatically applied when you start the application. Ensure the `migrations/` folder is included in your setup.
 
-#### 3.	Access the API:
+To run migrations manually, use:
+```bash
+migrate -path ./migrations -database sqlite3://db.sqlite up
+```
+
+To rollback:
+```bash
+migrate -path ./migrations -database sqlite3://db.sqlite down
+```
+   
+#### 4.	Access the API:
 - http://localhost:8080
 
-#### 4. Project Structure
+#### 5. Project Structure
 ```
 api-template/
 ├── cmd/            # Entry point
@@ -44,7 +56,7 @@ api-template/
 └── README.md       # Project description
 ```
 
-#### 5. Technologies Used
+#### 6. Technologies Used
 - GoLang
 - Docker
 - Gorilla Mux
