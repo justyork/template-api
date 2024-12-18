@@ -38,19 +38,25 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # Move to the deployment directory
-            cd /develop/go-template-api
-
+            cd /develop/go-template-api || exit 1
+            
             # Stop the current application (if running)
             if [ -f api-template ]; then
               pkill -f api-template || true
             fi
-
-            # Backup the old binary
-            mv api-template api-template.bak || true
-
+            
+            # Backup the old binary, if it exists
+            if [ -f api-template ]; then
+              mv api-template api-template.bak || true
+            fi
+            
             # Upload the new binary
             rm -f api-template
-            echo "${{ secrets.SERVER_USER }}: Uploaded new binary."
-
+            echo "***: Uploaded new binary."
+          
+            # Ensure correct permissions for logs
+            touch api-template.log
+            chmod 666 api-template.log
+            
             # Run the new binary in the background
             nohup ./api-template > api-template.log 2>&1 &
