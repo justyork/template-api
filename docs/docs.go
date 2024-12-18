@@ -9,11 +9,9 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://example.com/terms/",
         "contact": {
-            "name": "API Support",
-            "url": "http://example.com/support",
-            "email": "support@example.com"
+            "name": "York",
+            "email": "yorkshp@gmail.com"
         },
         "license": {
             "name": "MIT",

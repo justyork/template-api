@@ -10,14 +10,12 @@ definitions:
 host: localhost:8080
 info:
   contact:
-    email: support@example.com
-    name: API Support
-    url: http://example.com/support
+    email: yorkshp@gmail.com
+    name: York
   description: A lightweight and scalable REST API server built with GoLang.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  termsOfService: http://example.com/terms/
   title: API Template
   version: "1.0"
 paths:

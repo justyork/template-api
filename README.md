@@ -1,107 +1,96 @@
 # API Template
 
-A lightweight and scalable REST API server built with GoLang and Docker.
+A lightweight and scalable REST API server built with GoLang.
+
+## Overview
+
+This project is a template for building RESTful APIs using Go. It includes features such as JWT authentication, database
+migrations, and Swagger documentation.
 
 ## Features
-- Simple and modular structure
-- Dockerized for easy deployment
-- Ready to scale
 
-### Authentication
-
-This project uses JSON Web Tokens (JWT) for authentication.
-
-#### Endpoints
-- `POST /login`: Accepts JSON payload with `username` and `password`, returns a JWT token in a cookie.
-- `GET /protected`: A protected route that requires a valid JWT token.
-
-#### Example Usage
-Login:
-```bash
-curl -X POST http://localhost:8080/login -d '{"username":"testuser", "password":"password"}' -H "Content-Type: application/json"
-```
-Access Protected Route:
-```bash
-curl -X GET http://localhost:8080/protected --cookie "token=your_token"
-```
-
-### Environment Configuration
-
-This project uses environment variables for configuration.
-
-#### `.env.example`
-The file `.env.example` is provided as a template. It contains default values for required variables:
-
-```env
-DATABASE_URL=sqlite://db.sqlite
-JWT_SECRET=your_secret_key
-APP_PORT=8080
-```
-
-How it Works
-- When building the Docker image, if .env is not present, it will be automatically created from .env.example.
-- You can customize .env after the build if needed.
-
-Manually Creating .env
-
-If you’re running the application locally, create `.env` by copying `.env.example`:
-```bash
-cp .env.example .env
-```
-
-Then, edit the file with your desired configuration.
----
+- **JWT Authentication**: Secure your endpoints with JSON Web Tokens.
+- **Database Migrations**: Manage your database schema changes with ease.
+- **Swagger Documentation**: Automatically generated API documentation.
+- **Docker Support**: Easily containerize your application.
+- **CI/CD Pipeline**: Automated build and deployment using GitHub Actions.
 
 ## Getting Started
 
 ### Prerequisites
-- Docker installed on your system
 
-### Running the Project
-#### 1. Clone the repository:
+- Go 1.23 or later
+- Docker (optional, for containerization)
+- SQLite (for local development)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/justyork/api-template.git
+   cd api-template
+   ```
+
+2. Copy the example environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Update `.env` with your configuration.
+
+4. Run the application:
+
+   ```bash
+   go run cmd/main.go
+   ```
+
+### Running with Docker
+
+1. Build the Docker image:
+
+   ```bash
+   docker build -t api-template .
+   ```
+
+2. Run the Docker container:
+
+   ```bash
+   docker-compose up
+   ```
+
+### Running Tests
+
+Execute the following command to run tests:
+
 ```bash
-    git clone https://github.com/justyork/api-template.git
-    cd api-template
-```
-#### 2.	Build and run the application:
-```bash
-    docker-compose up --build 
-```
-#### Running Migrations
-Migrations are automatically applied when you start the application. Ensure the `migrations/` folder is included in your setup.
-
-To run migrations manually, use:
-```bash
-migrate -path ./migrations -database sqlite3://db.sqlite up
+go test ./... -v
 ```
 
-To rollback:
-```bash
-migrate -path ./migrations -database sqlite3://db.sqlite down
-```
-   
-#### 4.	Access the API:
-- http://localhost:8080
+## API Documentation
 
-#### 5. Project Structure
-```
-api-template/
-├── cmd/            # Entry point
-│   └── main.go
-├── internal/       # Application logic
-│   ├── handlers/   # HTTP-handles
-│   ├── services/   # Data logic
-│   └── models/     # Data models
-├── pkg/            # Common libriaries
-├── configs/        # Configuration fields
-├── migrations/     # SQL-migrations
-├── Dockerfile      
-├── docker-compose.yml 
-├── go.mod          # Go dependences
-└── README.md       # Project description
-```
+Access the Swagger UI at `http://localhost:8080/swagger/` to view the API documentation.
 
-#### 6. Technologies Used
-- GoLang
-- Docker
-- Gorilla Mux
+## Demo
+
+Explore the live demo of the [deployed project](https://go-template-api.justyork.dev) and its [Swagger documentation](https://go-template-api.justyork.dev/swagger/index.html).
+
+## CI/CD Pipeline
+
+The project includes a GitHub Actions workflow for continuous integration and deployment. The pipeline is triggered on
+pushes to the `main` branch and performs the following steps:
+
+- Checkout code
+- Setup Go environment
+- Build the application
+- Upload the binary to the server
+- Run the application on the server
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
+
+## Contact
+
+For support, contact [yorkshp@gmail.com](mailto:yorkshp@gmail.com).

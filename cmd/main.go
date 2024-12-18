@@ -23,7 +23,7 @@ import (
 func applyMigrations(db *sql.DB) {
 	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
 	if err != nil {
-		log.Fatalf("Failed to create database driver: %v", err)
+		log.Fatalf("Error creating database driver: %v", err)
 	}
 
 	sourceDriver, err := iofs.New(migrations.Files, ".")
@@ -46,11 +46,9 @@ func applyMigrations(db *sql.DB) {
 // @title API Template
 // @version 1.0
 // @description A lightweight and scalable REST API server built with GoLang.
-// @termsOfService http://example.com/terms/
 
-// @contact.name API Support
-// @contact.url http://example.com/support
-// @contact.email support@example.com
+// @contact.name York
+// @contact.email yorkshp@gmail.com
 
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
