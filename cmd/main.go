@@ -2,8 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/justyork/api-template/docs" // Import generated docs
 	"github.com/justyork/api-template/internal/middleware"
+	"github.com/justyork/api-template/internal/migrations"
 	"github.com/swaggo/http-swagger" // Swagger handler
 	"log"
 	"net/http"
@@ -17,11 +20,18 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func applyMigrations(databaseURL string) {
-	m, err := migrate.New(
-		"file://migrations",
-		databaseURL,
-	)
+func applyMigrations(db *sql.DB) {
+	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
+	if err != nil {
+		log.Fatalf("Failed to create database driver: %v", err)
+	}
+
+	sourceDriver, err := iofs.New(migrations.Files, ".")
+	if err != nil {
+		log.Fatalf("Failed to create source driver: %v", err)
+	}
+
+	m, err := migrate.NewWithInstance("iofs", sourceDriver, "sqlite3", driver)
 	if err != nil {
 		log.Fatalf("Failed to initialize migrations: %v", err)
 	}
@@ -76,7 +86,7 @@ func main() {
 	}
 	defer db.Close()
 
-	applyMigrations(databaseURL)
+	applyMigrations(db)
 
 	// Register routes
 	r := routes.RegisterRoutes()

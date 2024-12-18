@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Setup Go
+      # Setup Go
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
           go-version: 1.23
 
-      # Step 3: Build the binary
+      # Build the application
       - name: Build application
         run: |
           go build -o api-template cmd/main.go
@@ -29,27 +29,7 @@ jobs:
           GOOS: linux
           GOARCH: amd64
 
-      # Step 4: Upload binary to the server
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            # Move to the deployment directory
-            cd /develop/go-template-api || exit 1
-            
-            # Stop the current application (if running)
-            if [ -f api-template ]; then
-              pkill -f api-template || true
-            fi
-            
-            # Backup the old binary, if it exists
-            if [ -f api-template ]; then
-              mv api-template api-template.bak || true
-            fi
-
+      # Upload the binary
       - name: Upload binary to server
         uses: appleboy/scp-action@v0.1.5
         with:
@@ -59,22 +39,14 @@ jobs:
           source: ./api-template
           target: /develop/go-template-api/api-template
 
-      - name: Set permissions and run application
+      # Run the application
+      - name: Run application
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # Move to the deployment directory
-            cd /develop/go-template-api || exit 1
-            
-            # Ensure the new binary has executable permissions
+            cd /develop/go-template-api
             chmod +x api-template
-            
-            # Ensure correct permissions for logs
-            touch api-template.log
-            chmod 666 api-template.log
-            
-            # Run the new binary in the background
             nohup ./api-template > api-template.log 2>&1 &
