@@ -7,6 +7,25 @@ A lightweight and scalable REST API server built with GoLang and Docker.
 - Dockerized for easy deployment
 - Ready to scale
 
+### Authentication
+
+This project uses JSON Web Tokens (JWT) for authentication.
+
+#### Endpoints
+- `POST /login`: Accepts JSON payload with `username` and `password`, returns a JWT token in a cookie.
+- `GET /protected`: A protected route that requires a valid JWT token.
+
+#### Example Usage
+Login:
+```bash
+curl -X POST http://localhost:8080/login -d '{"username":"testuser", "password":"password"}' -H "Content-Type: application/json"
+```
+Access Protected Route:
+```bash
+curl -X GET http://localhost:8080/protected --cookie "token=your_token"
+```
+
+
 ## Getting Started
 
 ### Prerequisites

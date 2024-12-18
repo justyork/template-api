@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/justyork/api-template/internal/handlers"
 	"log"
 	"net/http"
 
@@ -15,7 +16,7 @@ import (
 func applyMigrations(db *sql.DB) {
 	m, err := migrate.New(
 		"file://migrations",
-		"sqlite3://db.sqlite",
+		"sqlite://db.sqlite",
 	)
 	if err != nil {
 		log.Fatalf("Failed to initialize migrations: %v", err)
@@ -42,6 +43,12 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("API is running"))
 	})
+
+	// Public routes
+	r.HandleFunc("/login", handlers.LoginHandler).Methods("POST")
+
+	// Protected route
+	r.HandleFunc("/protected", handlers.ProtectedHandler).Methods("GET")
 
 	log.Println("Starting server on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
