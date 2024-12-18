@@ -25,6 +25,32 @@ Access Protected Route:
 curl -X GET http://localhost:8080/protected --cookie "token=your_token"
 ```
 
+### Environment Configuration
+
+This project uses environment variables for configuration.
+
+#### `.env.example`
+The file `.env.example` is provided as a template. It contains default values for required variables:
+
+```env
+DATABASE_URL=sqlite://db.sqlite
+JWT_SECRET=your_secret_key
+APP_PORT=8080
+```
+
+How it Works
+- When building the Docker image, if .env is not present, it will be automatically created from .env.example.
+- You can customize .env after the build if needed.
+
+Manually Creating .env
+
+If you’re running the application locally, create `.env` by copying `.env.example`:
+```bash
+cp .env.example .env
+```
+
+Then, edit the file with your desired configuration.
+---
 
 ## Getting Started
 

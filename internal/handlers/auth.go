@@ -8,7 +8,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("your_secret_key")
+var jwtKey []byte
+
+// SetJWTKey sets the JWT secret key from main
+func SetJWTKey(key []byte) {
+	jwtKey = key
+}
 
 type Credentials struct {
 	Username string `json:"username"`
